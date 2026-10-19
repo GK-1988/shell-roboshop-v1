@@ -18,7 +18,7 @@ do
             --output text
     )
 
-    echo "$instance ID: $instance_id"
+    echo "$instance instance ID: $instance_id"
 
     if [ $instance != "frontend" ]; then
         IP=$( aws ec2 describe-instances --instance-ids $instance_id \
@@ -49,4 +49,6 @@ do
             }
         ]
     }'
+
+    echo "Updated R53 record for $instance"
 done
