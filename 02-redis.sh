@@ -41,3 +41,6 @@ validate $? "Allowing remote connections to Redis"
 systemctl enable redis &>> $logs_file
 systemctl start redis
 validate $? "Enable and start Redis"
+
+echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
