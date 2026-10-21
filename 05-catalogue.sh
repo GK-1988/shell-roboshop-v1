@@ -45,6 +45,9 @@ else
     echo -e "$(timestamp) [INFO] System user roboshop already exist...${Y}SKIPPING${N}"
 fi
 
+rm -rf /app
+validate $? "Removing old code"
+
 mkdir -p /app
 validate $? "Creating app directory"
 
@@ -65,6 +68,14 @@ systemctl daemon-reload &>> $logs_file
 systemctl enable catalogue &>> $logs_file
 systemctl start catalogue &>> $logs_file
 validate $? "Starting and enabling catalogue"
+
+cp "$scripts_dir/mongo.repo" /etc/yum.repos.d/mongo.repo
+validate $? "Adding Mongo repo"
+
+dnf install mongodb-mongosh -y
+validate $? "Installing MongoDB Client"
+
+
 
 
 echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
