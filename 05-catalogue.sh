@@ -75,9 +75,18 @@ validate $? "Adding Mongo repo"
 dnf install mongodb-mongosh -y &>> $logs_file
 validate $? "Installing MongoDB Client"
 
+product_count=$(mongosh --host <MONGODB-SERVER-IPADDRESS> --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()' 2>> $logs_file)
+validate $? "Connecting to MongoDB"
 
-mongosh --host "mongodb.$domain_name" </app/db/master-data.js
-validate $? "Loading products"
+if [ "$product_count" -eq 0 ]; then
+    mongosh --host "mongodb.$domain_name" </app/db/master-data.js &>> $logs_file
+    validate $? "Loading products"
+else
+    echo -e "$(timestamp) [INFO] Products are already loaded...${Y}SKIPPING${N}"
+fi
+
+systemctl restart catalogue
+validate $? "Restarting Catalogue"
 
 echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
 echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
