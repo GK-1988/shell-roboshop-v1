@@ -45,8 +45,8 @@ rm -rf /usr/share/nginx/html/* &>>$logs_file
 validate $? "Removing default nginx content"
 
 curl -L -o /tmp/frontend.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/frontend-v4.zip &>>$logs_file
-cd /usr/share/nginx/html &>>$logs_file
-unzip /tmp/frontend.zip &>>$logs_file
+cd /usr/share/nginx/html &>> $logs_file
+unzip /tmp/frontend.zip &>> $logs_file
 validate $? "Downloading and unzipping frontend code"
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/roboshop.conf"
